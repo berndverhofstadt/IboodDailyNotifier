@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -42,6 +43,7 @@ namespace IboodDailyNotifier
                 FillComboboxCountry();
                 //fill keywords in textbox
                 FillTextboxKeywords();
+                ChangesSaved();
             }
             catch (Exception)
             {
@@ -49,6 +51,19 @@ namespace IboodDailyNotifier
                 throw;
             }
         }
+
+        private void ChangesMade()
+        {
+            SaveStatus.Content = "You've made changes!";
+            SaveStatus.Background = Brushes.OrangeRed;
+        }
+
+        private void ChangesSaved()
+        {
+            SaveStatus.Content = "Changes Saved!";
+            SaveStatus.Background = Brushes.GreenYellow;
+        }
+
         private void LoadSettingsForConsole()
         {
             //put countries in combobox
@@ -131,26 +146,49 @@ namespace IboodDailyNotifier
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.IboodCountry = (CountryComboBox.SelectedItem as ComboBoxItem).Value.ToString();
-            if (!String.IsNullOrWhiteSpace(KeywordBox.Text))
+            try
             {
-                StringCollection result = new StringCollection();
-                string[] tempRes = KeywordBox.Text.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string keyW in tempRes)
+                Properties.Settings.Default.IboodCountry = (CountryComboBox.SelectedItem as ComboBoxItem).Value.ToString();
+                if (!String.IsNullOrWhiteSpace(KeywordBox.Text))
                 {
-                    result.Add(keyW);
+                    StringCollection result = new StringCollection();
+                    string[] tempRes = KeywordBox.Text.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string keyW in tempRes)
+                    {
+                        result.Add(keyW);
+                    }
+                    Properties.Settings.Default.Keywords = result;
                 }
-                Properties.Settings.Default.Keywords = result;
-            }
-            else
-                Properties.Settings.Default.Keywords = null;
+                else
+                    Properties.Settings.Default.Keywords = null;
 
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.Save();
+                ChangesSaved();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Changes could not be saved.");
+                throw;
+            }
         }
 
         private void IboodNow_Click(object sender, RoutedEventArgs e)
         {
-            CheckIboodDeals();
+            string StatusCnt = (string)SaveStatus.Content;
+            if (StatusCnt.Contains("made"))
+            {
+                MessageBoxResult dialogResult = MessageBox.Show("Do you want to save the changes you have made?", "Changes detected", MessageBoxButton.YesNoCancel);
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+                    SaveChanges_Click(sender,e);
+                    CheckIboodDeals();
+                }
+                else if (dialogResult == MessageBoxResult.No)
+                {
+                    CheckIboodDeals();
+                }
+            }
+            
         }
 
         public void CheckIboodDeals()
@@ -159,15 +197,31 @@ namespace IboodDailyNotifier
             {
                 LoadSettingsForConsole();
                 // https://msdn.microsoft.com/en-us/library/dc0c9ekk(v=vs.110).aspx
+
                 XmlDocument doc = new XmlDocument();
                 doc.Load(iBoodXmlUrl);
-
+                List<item> productList = new List<item>();
                 XmlNodeList elemList = doc.GetElementsByTagName("item");
                 for (int i = 0; i < elemList.Count; i++)
                 {
                     //search with link for sertain attributes
-
-                    MessageBox.Show(elemList[i].InnerXml);
+                    string addedTags = "<item>" + elemList[i].InnerXml + "</item>";
+                    XmlSerializer serializer = new XmlSerializer(typeof(item));
+                    using (StringReader reader = new StringReader(addedTags))
+                    {
+                        productList.Add((item)(serializer.Deserialize(reader)));
+                    }
+                }
+                foreach (var itemOnline in productList)
+                {
+                    foreach (var searchItem in Properties.Settings.Default.Keywords)
+                    {
+                        if (itemOnline.title.ToLower().Contains(searchItem.ToLower()))
+                        {
+                            MessageBox.Show("Found the following item: \n"+itemOnline.title);
+                            break;
+                        }
+                    }
                 }
             }
             catch (Exception)
@@ -175,6 +229,21 @@ namespace IboodDailyNotifier
                 MessageBox.Show("Deals of today cannot be loaded! \nTry again later.");
                 throw;
             }
+        }
+
+        private void KeywordBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ChangesMade();
+        }
+
+        private void EmailReciever_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ChangesMade();
+        }
+
+        private void CountryComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ChangesMade();
         }
     }
 }

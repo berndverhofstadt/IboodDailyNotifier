@@ -29,9 +29,9 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Row="0" VerticalAlignment="Center">Country</Label>
-                <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" Name="CountryComboBox" ></ComboBox>
+                <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" Name="CountryComboBox" SelectionChanged="CountryComboBox_SelectionChanged"></ComboBox>
                 <Label Grid.Row="1" VerticalAlignment="Center">Email to</Label>
-                <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Name="EmailReciever">
+                <TextBox Grid.Row="1" TextChanged="EmailReciever_TextChanged" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Name="EmailReciever">
                     <TextBox.Style>
                         <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                             <Style.Resources>
@@ -56,7 +56,7 @@
                     </TextBox.Style>
                 </TextBox>
                 <Label Grid.Row="2" VerticalAlignment="Center">Search for</Label>
-                <TextBox Grid.Row="2" Grid.Column="1"  TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" Margin="5" Name="KeywordBox">
+                <TextBox Grid.Row="2" Grid.Column="1" TextChanged="KeywordBox_TextChanged" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" Margin="5" Name="KeywordBox">
                     <TextBox.Style>
                         <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                             <Style.Resources>
@@ -80,7 +80,7 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-                <Label Grid.Row="4" Name="SaveStatus" VerticalAlignment="Center">Changes Saved</Label>
+                <Label Grid.Row="4" Name="SaveStatus" VerticalAlignment="Center" Background="GreenYellow">Changes Saved</Label>
                 <Button Grid.Row="4" Margin="4" Grid.Column="1" Name="SaveChanges" Click="SaveChanges_Click">Save Settings</Button> 
             </Grid>
             <Label Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Settings Ibood Notifier</Label>
