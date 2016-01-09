@@ -45,5 +45,17 @@ namespace IboodDailyNotifier.Properties {
                 this["Keywords"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IboodCountry {
+            get {
+                return ((string)(this["IboodCountry"]));
+            }
+            set {
+                this["IboodCountry"] = value;
+            }
+        }
     }
 }

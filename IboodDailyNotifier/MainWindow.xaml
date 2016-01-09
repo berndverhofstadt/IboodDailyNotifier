@@ -18,24 +18,24 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="33" />
+                    <RowDefinition Height="33" />
                     <RowDefinition Height="100" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="33" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.8*"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Row="0">Country</Label>
-                <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" Name="CountryComboBox"></ComboBox>
-                <Label Grid.Row="1">Email to</Label>
+                <Label Grid.Row="0" VerticalAlignment="Center">Country</Label>
+                <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" Name="CountryComboBox" ></ComboBox>
+                <Label Grid.Row="1" VerticalAlignment="Center">Email to</Label>
                 <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Name="EmailReciever">
                     <TextBox.Style>
                         <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                             <Style.Resources>
-                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                     <VisualBrush.Visual>
                                         <Label Content="example@domain.org" Foreground="LightGray" />
                                     </VisualBrush.Visual>
@@ -80,7 +80,7 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-                <Label Grid.Row="4" Name="SaveStatus">Changes Saved</Label>
+                <Label Grid.Row="4" Name="SaveStatus" VerticalAlignment="Center">Changes Saved</Label>
                 <Button Grid.Row="4" Margin="4" Grid.Column="1" Name="SaveChanges" Click="SaveChanges_Click">Save Settings</Button> 
             </Grid>
             <Label Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Settings Ibood Notifier</Label>
