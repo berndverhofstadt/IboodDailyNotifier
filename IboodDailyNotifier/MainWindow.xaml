@@ -19,8 +19,9 @@
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="33" />
-                    <RowDefinition Height="33" />
                     <RowDefinition Height="100" />
+                    <RowDefinition Height="33" />
+                    <RowDefinition Height="33" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="33" />
                 </Grid.RowDefinitions>
@@ -30,33 +31,8 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Row="0" VerticalAlignment="Center">Country</Label>
                 <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" Name="CountryComboBox" SelectionChanged="CountryComboBox_SelectionChanged"></ComboBox>
-                <Label Grid.Row="1" VerticalAlignment="Center">Email to</Label>
-                <TextBox Grid.Row="1" TextChanged="EmailReciever_TextChanged" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Name="EmailReciever">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                            <Style.Resources>
-                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                    <VisualBrush.Visual>
-                                        <Label Content="example@domain.org" Foreground="LightGray" />
-                                    </VisualBrush.Visual>
-                                </VisualBrush>
-                            </Style.Resources>
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                <Label Grid.Row="2" VerticalAlignment="Center">Search for</Label>
-                <TextBox Grid.Row="2" Grid.Column="1" TextChanged="KeywordBox_TextChanged" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" Margin="5" Name="KeywordBox">
+                <Label Grid.Row="1" VerticalAlignment="Center">Search for</Label>
+                <TextBox Grid.Row="1" Grid.Column="1" TextChanged="KeywordBox_TextChanged" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" Margin="5" Name="KeywordBox">
                     <TextBox.Style>
                         <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                             <Style.Resources>
@@ -80,113 +56,60 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-                <Label Grid.Row="3" VerticalAlignment="Center">Enter SMTP Settings</Label>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="3" Grid.Column="1" Margin="5">
-                    <StackPanel >
-                        <TextBox  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2" Name="smtp_emailfrom" TextChanged="smtp_emailfrom_TextChanged">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                    <Style.Resources>
-                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
-                                            <VisualBrush.Visual>
-                                                <Label Content="Email From" Foreground="LightGray" />
-                                            </VisualBrush.Visual>
-                                        </VisualBrush>
-                                    </Style.Resources>
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="{x:Null}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                            <Setter Property="Background" Value="White" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
+                <Label Grid.Row="2" VerticalAlignment="Center">IFTTT Eventname</Label>
+                <TextBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5" Name="IFTTT_eventname_txt" TextChanged="IFTTT_eventname_txt_TextChanged">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <Style.Resources>
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Label Content="eventName" Foreground="LightGray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                
+                <Label Grid.Row="3" VerticalAlignment="Center">IFTTT Key</Label>
+                <TextBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5" Name="IFTTT_key_txt" TextChanged="IFTTT_key_txt_TextChanged">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <Style.Resources>
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Label Content="key" Foreground="LightGray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
 
-                        <TextBox  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2" Name="smtp_host_txt" TextChanged="smtp_host_txt_TextChanged">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                    <Style.Resources>
-                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
-                                            <VisualBrush.Visual>
-                                                <Label Content="SMTP Host" Foreground="LightGray" />
-                                            </VisualBrush.Visual>
-                                        </VisualBrush>
-                                    </Style.Resources>
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="{x:Null}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                            <Setter Property="Background" Value="White" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
-                        <TextBox  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2" Name="smtp_port_txt" TextChanged="smtp_port_txt_TextChanged">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                    <Style.Resources>
-                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
-                                            <VisualBrush.Visual>
-                                                <Label Content="SMTP Port" Foreground="LightGray" />
-                                            </VisualBrush.Visual>
-                                        </VisualBrush>
-                                    </Style.Resources>
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="{x:Null}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                            <Setter Property="Background" Value="White" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
-                        <TextBox  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2" Name="smtp_username_txt" TextChanged="smtp_username_txt_TextChanged">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                    <Style.Resources>
-                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
-                                            <VisualBrush.Visual>
-                                                <Label Content="SMTP Username" Foreground="LightGray" />
-                                            </VisualBrush.Visual>
-                                        </VisualBrush>
-                                    </Style.Resources>
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="{x:Null}">
-                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                            <Setter Property="Background" Value="White" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
-                        <PasswordBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2" Name="smtp_pass_txt" PasswordChanged="smtp_pass_txt_PasswordChanged"/>
-                    </StackPanel>
-                </ScrollViewer>
-                
-                
-                <Label Grid.Row="4" Name="SaveStatus" VerticalAlignment="Center" Background="GreenYellow">Changes Saved</Label>
-                <Button Grid.Row="4" Margin="4" Grid.Column="1" Name="SaveChanges" Click="SaveChanges_Click">Save Settings</Button> 
+                <Label Grid.Row="5" Name="SaveStatus" VerticalAlignment="Center" Background="GreenYellow">Changes Saved</Label>
+                <Button Grid.Row="5" Margin="4" Grid.Column="1" Name="SaveChanges" Click="SaveChanges_Click">Save Settings</Button> 
             </Grid>
             <Label Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Settings Ibood Notifier</Label>
             

@@ -61,72 +61,24 @@ namespace IboodDailyNotifier.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EmailTo {
+        public string IFTTT_eventName {
             get {
-                return ((string)(this["EmailTo"]));
+                return ((string)(this["IFTTT_eventName"]));
             }
             set {
-                this["EmailTo"] = value;
+                this["IFTTT_eventName"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("name@example.org")]
-        public string EmailFrom {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IFTTT_key {
             get {
-                return ((string)(this["EmailFrom"]));
+                return ((string)(this["IFTTT_key"]));
             }
             set {
-                this["EmailFrom"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("smtp.example.org")]
-        public string SMTP_Server {
-            get {
-                return ((string)(this["SMTP_Server"]));
-            }
-            set {
-                this["SMTP_Server"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("name@example.org")]
-        public string SMTP_Username {
-            get {
-                return ((string)(this["SMTP_Username"]));
-            }
-            set {
-                this["SMTP_Username"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Example")]
-        public string SMTP_Password {
-            get {
-                return ((string)(this["SMTP_Password"]));
-            }
-            set {
-                this["SMTP_Password"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("25")]
-        public int SMTP_Port {
-            get {
-                return ((int)(this["SMTP_Port"]));
-            }
-            set {
-                this["SMTP_Port"] = value;
+                this["IFTTT_key"] = value;
             }
         }
     }

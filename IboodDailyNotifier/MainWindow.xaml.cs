@@ -2,24 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
-using System.Xml.XPath;
 
 namespace IboodDailyNotifier
 {
@@ -29,9 +16,27 @@ namespace IboodDailyNotifier
     public partial class MainWindow : Window
     {
         private string iBoodXmlUrl;
+        Dictionary<string, string> arguments = new Dictionary<string, string>();
         public MainWindow()
         {
             InitializeComponent();
+            string[] args = Environment.GetCommandLineArgs();
+
+            for (int index = 1; index < args.Length; index += 2)
+            {
+                string arg = args[index].Replace("-", "");
+                arguments.Add(arg, args[index + 1]);
+            }
+
+            if (arguments.ContainsKey("SilentNow"))
+            {
+                if (arguments["SilentNow"] == "true")
+                {
+                    LoadSettingsForConsole();
+                    CheckIboodDeals();
+                    Application.Current.Shutdown();
+                }
+            }
             LoadSettingsForApp();
         }
 
@@ -39,19 +44,14 @@ namespace IboodDailyNotifier
         {
             try
             {
-                EmailReciever.Text = Properties.Settings.Default.EmailTo;
-                smtp_host_txt.Text = Properties.Settings.Default.SMTP_Server;
-                smtp_username_txt.Text = Properties.Settings.Default.SMTP_Username;
-                if (Properties.Settings.Default.SMTP_Port != 0)
-                {
-                    smtp_port_txt.Text = Convert.ToString(Properties.Settings.Default.SMTP_Port);
-                }
-                smtp_emailfrom.Text = Properties.Settings.Default.EmailFrom;
+                IFTTT_eventname_txt.Text = Properties.Settings.Default.IFTTT_eventName;
+                IFTTT_key_txt.Text = Properties.Settings.Default.IFTTT_key;
                 LoadSettingsForConsole();
                 //fill the combobox with countries
                 FillComboboxCountry();
                 //fill keywords in textbox
                 FillTextboxKeywords();
+                // Set changes as saved
                 ChangesSaved();
             }
             catch (Exception)
@@ -138,7 +138,6 @@ namespace IboodDailyNotifier
                     CountryComboBox.SelectedItem = country;
                 }
             }
-            //MessageBox.Show((CountryComboBox.SelectedItem as ComboBoxItem).Value.ToString());
         }
 
         private void buildIboodUrl()
@@ -159,12 +158,8 @@ namespace IboodDailyNotifier
             try
             {
                 Properties.Settings.Default.IboodCountry = (CountryComboBox.SelectedItem as ComboBoxItem).Value.ToString();
-                Properties.Settings.Default.EmailTo = EmailReciever.Text;
-                Properties.Settings.Default.EmailFrom = smtp_emailfrom.Text;
-                Properties.Settings.Default.SMTP_Port = Convert.ToInt16(smtp_port_txt.Text);
-                Properties.Settings.Default.SMTP_Password = smtp_pass_txt.Password;
-                Properties.Settings.Default.SMTP_Username = smtp_username_txt.Text;
-                Properties.Settings.Default.SMTP_Server = smtp_host_txt.Text;
+                Properties.Settings.Default.IFTTT_key = IFTTT_key_txt.Text;
+                Properties.Settings.Default.IFTTT_eventName = IFTTT_eventname_txt.Text;
                 if (!String.IsNullOrWhiteSpace(KeywordBox.Text))
                 {
                     StringCollection result = new StringCollection();
@@ -197,6 +192,7 @@ namespace IboodDailyNotifier
                 if (dialogResult == MessageBoxResult.Yes)
                 {
                     SaveChanges_Click(sender,e);
+
                     CheckIboodDeals();
                 }
                 else if (dialogResult == MessageBoxResult.No)
@@ -204,7 +200,8 @@ namespace IboodDailyNotifier
                     CheckIboodDeals();
                 }
             }
-            
+            else
+                CheckIboodDeals();
         }
 
         public void CheckIboodDeals()
@@ -228,7 +225,7 @@ namespace IboodDailyNotifier
                         productList.Add((item)(serializer.Deserialize(reader)));
                     }
                 }
-                List<item> EmailProducts = new List<item>();
+                List<item> PushProducts = new List<item>();
                 foreach (var itemOnline in productList)
                 {
                     foreach (var searchItem in Properties.Settings.Default.Keywords)
@@ -236,12 +233,27 @@ namespace IboodDailyNotifier
                         if (itemOnline.title.ToLower().Contains(searchItem.ToLower()))
                         {
                             // MessageBox.Show("Found the following item: \n"+itemOnline.title);
-                            EmailProducts.Add(itemOnline);
+                            PushProducts.Add(itemOnline);
                             break;
                         }
                     }
                 }
-                sendEmail(EmailProducts);
+                if (PushProducts != null)
+                {
+                    sendToIFTTT(PushProducts);
+                }
+                else
+                {
+                    if (arguments.ContainsKey("SilentNow"))
+                    {
+                        if (arguments["SilentNow"] != "true")
+                        {
+                            MessageBox.Show("Our job is done!\nWe have checked all the items but nothing found!");
+                        }
+                    }
+                    else
+                        MessageBox.Show("Our job is done!\nWe have checked all the items but nothing found!");
+                }
             }
             catch (Exception)
             {
@@ -250,37 +262,43 @@ namespace IboodDailyNotifier
             }
         }
 
-        private void sendEmail(List<item> listToEmail)
+        private void sendToIFTTT(List<item> pushProducts)
         {
             try
             {
-                if (!String.IsNullOrEmpty(Properties.Settings.Default.EmailTo)&&
-                    !String.IsNullOrEmpty(Properties.Settings.Default.EmailFrom)&&
-                    !String.IsNullOrEmpty(Properties.Settings.Default.SMTP_Server)&&
-                    !String.IsNullOrEmpty(Properties.Settings.Default.SMTP_Username) &&
-                    !String.IsNullOrEmpty(Properties.Settings.Default.SMTP_Password) &&
-                    Properties.Settings.Default.SMTP_Port != 0)
+                if (String.IsNullOrEmpty(Properties.Settings.Default.IFTTT_eventName)&&String.IsNullOrEmpty(Properties.Settings.Default.IFTTT_key))
+                    throw new Exception("IFTTT Key or eventname not filled in!");
+                foreach (var product in pushProducts)
                 {
-                    MailMessage mail = new MailMessage(Properties.Settings.Default.EmailFrom, Properties.Settings.Default.EmailTo);
-                    SmtpClient client = new SmtpClient();
-                    client.Port = Properties.Settings.Default.SMTP_Port;
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.UseDefaultCredentials = false;
-                    client.Host = Properties.Settings.Default.SMTP_Server;
-                    client.EnableSsl = true;
-                    client.Credentials = new System.Net.NetworkCredential(Properties.Settings.Default.SMTP_Username, Properties.Settings.Default.SMTP_Password);
-                    mail.Subject = "We found something for you!";
-                    mail.Body = "Test";
-                    client.Send(mail);
+                    using (var client = new System.Net.WebClient())
+                    {
+
+                        var url = "https://maker.ifttt.com/trigger/" + Properties.Settings.Default.IFTTT_eventName + "/with/key/" + Properties.Settings.Default.IFTTT_key + "?value1=" + product.title + "?value2=" + product.link + "?value3=" + product.description;
+                        string result = client.DownloadString(new Uri(url));
+                        if (!result.StartsWith("Congratulations"))
+                        {
+                            MessageBox.Show("Mislukt. Foutinformatie:" + result);
+                        }
+                    }
                 }
+                if (arguments.ContainsKey("SilentNow"))
+                {
+                    if (arguments["SilentNow"] != "true")
+                    {
+                        MessageBox.Show("Items will be send to you!");
+                    }
+                }
+                else
+                    MessageBox.Show("Items will be send to you!");
+
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                MessageBox.Show(e.Message);
             }
+            
         }
-
+       
         private void KeywordBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ChangesMade();
@@ -296,29 +314,14 @@ namespace IboodDailyNotifier
             ChangesMade();
         }
 
-        private void smtp_port_txt_TextChanged(object sender, TextChangedEventArgs e)
+        private void IFTTT_key_txt_TextChanged(object sender, TextChangedEventArgs e)
         {
             ChangesMade();
         }
 
-        private void smtp_host_txt_TextChanged(object sender, TextChangedEventArgs e)
+        private void IFTTT_eventname_txt_TextChanged(object sender, TextChangedEventArgs e)
         {
             ChangesMade();
-        }
-
-        private void smtp_username_txt_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ChangesMade();
-        }
-
-        private void smtp_pass_txt_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            ChangesMade();
-        }
-
-        private void smtp_emailfrom_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }

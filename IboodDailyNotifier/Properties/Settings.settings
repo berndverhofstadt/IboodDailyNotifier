@@ -11,23 +11,11 @@
     <Setting Name="IboodCountry" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="EmailTo" Type="System.String" Scope="User">
+    <Setting Name="IFTTT_eventName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="EmailFrom" Type="System.String" Scope="User">
-      <Value Profile="(Default)">name@example.org</Value>
-    </Setting>
-    <Setting Name="SMTP_Server" Type="System.String" Scope="User">
-      <Value Profile="(Default)">smtp.example.org</Value>
-    </Setting>
-    <Setting Name="SMTP_Username" Type="System.String" Scope="User">
-      <Value Profile="(Default)">name@example.org</Value>
-    </Setting>
-    <Setting Name="SMTP_Password" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Example</Value>
-    </Setting>
-    <Setting Name="SMTP_Port" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">25</Value>
+    <Setting Name="IFTTT_key" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
