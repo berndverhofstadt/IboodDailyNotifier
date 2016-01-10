@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IboodDailyNotifier"
         mc:Ignorable="d"
-        Title="Ibood Daily Notifier" Height="410" Width="600">
+        Title="Ibood Daily Notifier" Height="410" Width="600" Icon="Images/bell-icon.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
