@@ -61,12 +61,72 @@ namespace IboodDailyNotifier.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Email {
+        public string EmailTo {
             get {
-                return ((string)(this["Email"]));
+                return ((string)(this["EmailTo"]));
             }
             set {
-                this["Email"] = value;
+                this["EmailTo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("name@example.org")]
+        public string EmailFrom {
+            get {
+                return ((string)(this["EmailFrom"]));
+            }
+            set {
+                this["EmailFrom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("smtp.example.org")]
+        public string SMTP_Server {
+            get {
+                return ((string)(this["SMTP_Server"]));
+            }
+            set {
+                this["SMTP_Server"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("name@example.org")]
+        public string SMTP_Username {
+            get {
+                return ((string)(this["SMTP_Username"]));
+            }
+            set {
+                this["SMTP_Username"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Example")]
+        public string SMTP_Password {
+            get {
+                return ((string)(this["SMTP_Password"]));
+            }
+            set {
+                this["SMTP_Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int SMTP_Port {
+            get {
+                return ((int)(this["SMTP_Port"]));
+            }
+            set {
+                this["SMTP_Port"] = value;
             }
         }
     }
