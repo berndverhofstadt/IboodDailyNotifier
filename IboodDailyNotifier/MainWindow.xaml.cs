@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Net;
+using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -232,7 +234,7 @@ namespace IboodDailyNotifier
                     {
                         if (itemOnline.title.ToLower().Contains(searchItem.ToLower()))
                         {
-                            // MessageBox.Show("Found the following item: \n"+itemOnline.title);
+                            //MessageBox.Show("Found the following item: \n"+itemOnline.title);
                             PushProducts.Add(itemOnline);
                             break;
                         }
@@ -270,16 +272,45 @@ namespace IboodDailyNotifier
                     throw new Exception("IFTTT Key or eventname not filled in!");
                 foreach (var product in pushProducts)
                 {
-                    using (var client = new System.Net.WebClient())
-                    {
+                    var url = "https://maker.ifttt.com/trigger/" + Properties.Settings.Default.IFTTT_eventName + "/with/key/" + Properties.Settings.Default.IFTTT_key;
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "POST";
 
-                        var url = "https://maker.ifttt.com/trigger/" + Properties.Settings.Default.IFTTT_eventName + "/with/key/" + Properties.Settings.Default.IFTTT_key + "?value1=" + product.title + "?value2=" + product.link + "?value3=" + product.description;
-                        string result = client.DownloadString(new Uri(url));
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        string json = new JavaScriptSerializer().Serialize(new
+                        {
+                            value1 = product.title,
+                            value2 = product.link
+                        });
+
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
                         if (!result.StartsWith("Congratulations"))
                         {
                             MessageBox.Show("Mislukt. Foutinformatie:" + result);
                         }
                     }
+
+
+                    //using (var client = new System.Net.WebClient())
+                    //{
+
+                    //    var url = "https://maker.ifttt.com/trigger/" + Properties.Settings.Default.IFTTT_eventName + "/with/key/" + Properties.Settings.Default.IFTTT_key + "?value1=" + product.title + "?value2=" + product.link + "?value3=" + product.description;
+                    //    string result = client.DownloadString(new Uri(url));
+                    //    if (!result.StartsWith("Congratulations"))
+                    //    {
+                    //        MessageBox.Show("Mislukt. Foutinformatie:" + result);
+                    //    }
+                    //}
                 }
                 if (arguments.ContainsKey("SilentNow"))
                 {
